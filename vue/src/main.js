@@ -8,7 +8,8 @@ new Vue({
         newTaskTitle: '',
         newTaskDescription: '',
         newTaskDeadline: '',
-        editingTask: null, // Индекс задачи, которую мы редактируем
+        newTaskReturn: false,
+        editingTask: null,
         editedTask: { title: '', description: '', deadline: '' } // Объект для временного хранения отредактированных данных
     },
     methods: {
@@ -23,6 +24,11 @@ new Vue({
                 deadline: task.deadline
             };
         },
+
+        returnTaskForm(){
+
+        },
+
         // Метод для сохранения отредактированной задачи
         saveEditedTask() {
             let task;
@@ -83,7 +89,6 @@ new Vue({
                 this.inProgressTasks.push(task);
                 return; // Вернуться после перемещения в столбец "В работе"
             }
-
             const index1 = this.inProgressTasks.indexOf(task);
             if (index1 !== -1) {
                 this.inProgressTasks.splice(index1, 1);
@@ -96,12 +101,22 @@ new Vue({
                 this.completedTasks.push(task);
                 return; // Вернуться после перемещения в столбец "Выполненные"
             }
-            const index3 = this.completedTasks.indexOf(task);
-            if (index3 !== -1){
-                this.completedTasks.splice(index3, 1);
+
+        },
+        removeTask(task){
+            const index4 = this.completedTasks.indexOf(task);
+            if (index4 !== -1){
+                this.completedTasks.splice(index4, 1);
                 this.testingTasks.push(task);
                 return;
             }
+            const index3 = this.testingTasks.indexOf(task);
+            if (index3 !== -1){
+                this.testingTasks.splice(index3, 1);
+                this.inProgressTasks.push(task);
+                return;
+            }
+
         },
         clearForm() {
             this.newTaskTitle = '';
