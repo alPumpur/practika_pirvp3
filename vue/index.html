@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="./css/main.css">
     <title>Kanban Доска</title>
+    <link rel="stylesheet" href="./css/main.css">
 </head>
 <body>
-<div id="app">
+<div id="app" class="app">
     <div class="column" id="column1">
         <h2>Запланированные задачи</h2>
         <div v-for="(task, index) in plannedTasks" :key="task.created">
@@ -19,7 +19,7 @@
                 <p>Последнее редактирование: {{ task.lastEdited }}</p>
                 <button @click="editTaskForm(index)">Редактировать</button>
                 <button @click="deleteTask('planned', index)">Удалить</button>
-                <button @click="moveTask(task, 'column1', 'column2')">В работу</button>
+                <button @click="moveTask(task)">В работу</button>
             </div>
         </div>
     </div>
@@ -29,14 +29,13 @@
         <div v-for="(task, index) in inProgressTasks" :key="task.created">
             <div class="task-card">
                 <h3>{{ task.title }}</h3>
-                <p v-if="task.returnReason">Причина возврата: {{ task.returnReason }}</p>
                 <p>{{ task.description }}</p>
                 <p>Дата создания: {{ task.created }}</p>
                 <p>Дедлайн: {{ task.deadline }}</p>
                 <p>Последнее редактирование: {{ task.lastEdited }}</p>
                 <button @click="editTaskForm(index)">Редактировать</button>
                 <button @click="deleteTask('inProgress', index)">Удалить</button>
-                <button @click="moveTask(task, 'column2', 'column3')">Передать в тестирование</button>
+                <button @click="moveTask(task)">Передать в тестирование</button>
             </div>
         </div>
     </div>
@@ -51,8 +50,8 @@
                 <p>Последнее редактирование: {{ task.lastEdited }}</p>
                 <button @click="editTaskForm(index)">Редактировать</button>
                 <button @click="deleteTask('testing', index)">Удалить</button>
-                <button @click="moveTask(task, 'column3', 'column4')">Передать в выполненные</button>
-                <button @click="removeTask(task, 'column3', 'column2')" :disabled="!task.returnReason">Передать в работу</button>
+                <button @click="moveTask(task)">Передать в выполненные</button>
+                <button @click="removeTask(task)" :disabled="!task.returnReason">Передать в работу</button>
                 <input type="text" v-model="task.returnReason" placeholder="Причина возврата">
             </div>
         </div>
@@ -60,14 +59,16 @@
     <div class="column" id="column4">
         <h2>Выполненные</h2>
         <div v-for="(task, index) in completedTasks" :key="task.created">
-            <div class="task-card">
+            <div class="task-card" :class="{ overdue: task.deadlineNoPassed }">
                 <h3>{{ task.title }}</h3>
                 <p>{{ task.description }}</p>
                 <p>Дата создания: {{ task.created }}</p>
                 <p>Дедлайн: {{ task.deadline }}</p>
+                <p v-if="task.deadlineNoPassed">Статус: Просроченная</p>
+                <p v-else>Статус: Выполненная в срок</p>
                 <p>Последнее редактирование: {{ task.lastEdited }}</p>
                 <button @click="deleteTask('completed', index)">Удалить</button>
-                <button @click="removeTask(task, 'column4', 'column3')">Передать в тестирование</button>
+                <button @click="removeTask(task)">Передать в тестирование</button>
             </div>
         </div>
     </div>
@@ -85,7 +86,7 @@
         </div>
         <div class="form-group">
             <label for="editTaskDeadline">Дедлайн:</label>
-            <input type="text" id="editTaskDeadline" v-model="editedTask.deadline">
+            <input type="text" id="editTaskDeadline" v-model="editedTask.deadline" disabled>
         </div>
         <button @click="saveEditedTask">Сохранить</button>
         <button @click="cancelEditTask">Отмена</button>
@@ -102,7 +103,7 @@
     </div>
     <div class="form-group">
         <label for="taskDeadline">Дедлайн:</label>
-        <input type="text" id="taskDeadline" v-model="newTaskDeadline">
+        <input type="date" id="taskDeadline" v-model="newTaskDeadline">
     </div>
     <button @click="addTask('planned')">Добавить задачу</button>
 </div>

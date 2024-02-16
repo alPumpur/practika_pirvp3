@@ -12,11 +12,9 @@ new Vue({
         editedTask: { title: '', description: '', deadline: '' } // Объект для временного хранения отредактированных данных
     },
     methods: {
-        // Метод для открытия формы редактирования задачи
         editTaskForm(index) {
             this.editingTask = index;
-            // Заполнение формы текущими данными задачи
-            const task = this.plannedTasks[index] && this.inProgressTasks[index] && this.testingTasks[index];
+            const task = this.plannedTasks[index] || this.inProgressTasks[index] || this.testingTasks[index];
             this.editedTask = {
                 title: task.title,
                 description: task.description,
@@ -24,9 +22,6 @@ new Vue({
             };
         },
 
-
-
-        // Метод для сохранения отредактированной задачи
         saveEditedTask() {
             let task;
             if (this.editingTask !== null) {
@@ -45,14 +40,13 @@ new Vue({
                 task.deadline = this.editedTask.deadline;
                 task.lastEdited = new Date().toLocaleString();
             }
-            this.editingTask = null; // Закрыть форму редактирования
+            this.editingTask = null;
         },
 
-        // Метод для отмены редактирования задачи
         cancelEditTask() {
-            this.editingTask = null; // Закрыть форму редактирования
+            this.editingTask = null;
         },
-        // Остальные методы добавления, удаления и перемещения задач остаются без изменений
+
         addTask(column) {
             if (this.newTaskTitle.trim() === '') return;
             const task = {
@@ -68,7 +62,6 @@ new Vue({
             this.clearForm();
         },
         deleteTask(column, index) {
-            // Удаление задачи из соответствующего массива
             if (column === 'planned') {
                 this.plannedTasks.splice(index, 1);
             } else if (column === 'inProgress') {
@@ -84,42 +77,45 @@ new Vue({
             if (index !== -1) {
                 this.plannedTasks.splice(index, 1);
                 this.inProgressTasks.push(task);
-                return; // Вернуться после перемещения в столбец "В работе"
+                return;
             }
+
             const index1 = this.inProgressTasks.indexOf(task);
             if (index1 !== -1) {
                 this.inProgressTasks.splice(index1, 1);
                 this.testingTasks.push(task);
-                return; // Вернуться после перемещения в столбец "Тестирование"
+                return;
             }
+
             const index2 = this.testingTasks.indexOf(task);
             if (index2 !== -1) {
                 this.testingTasks.splice(index2, 1);
+                const currentDate = new Date();
+                const taskDeadline = new Date(task.deadline);
+                task.deadlineNoPassed = currentDate > taskDeadline;
                 this.completedTasks.push(task);
-                return; // Вернуться после перемещения в столбец "Выполненные"
+                return;
             }
-
         },
-        removeTask(task){
+        removeTask(task) {
             const index4 = this.completedTasks.indexOf(task);
-            if (index4 !== -1){
+            if (index4 !== -1) {
                 this.completedTasks.splice(index4, 1);
                 this.testingTasks.push(task);
                 return;
             }
             const index3 = this.testingTasks.indexOf(task);
-            if (index3 !== -1 && task.returnReason){
+            if (index3 !== -1 && task.returnReason) {
                 this.testingTasks.splice(index3, 1);
                 this.inProgressTasks.push(task);
                 return;
             }
-
         },
+
         clearForm() {
             this.newTaskTitle = '';
             this.newTaskDescription = '';
             this.newTaskDeadline = '';
-            this.newTaskReturn = '';
         }
     }
 });

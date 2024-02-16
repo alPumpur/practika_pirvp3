@@ -16,3 +16,7 @@
 .edit-form{
     margin-bottom: 20px;
 }
+
+.task-card.overdue {
+    border: 2px solid red;
+}
