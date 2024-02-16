@@ -8,7 +8,6 @@ new Vue({
         newTaskTitle: '',
         newTaskDescription: '',
         newTaskDeadline: '',
-        newTaskReturn: false,
         editingTask: null,
         editedTask: { title: '', description: '', deadline: '' } // Объект для временного хранения отредактированных данных
     },
@@ -25,9 +24,7 @@ new Vue({
             };
         },
 
-        returnTaskForm(){
 
-        },
 
         // Метод для сохранения отредактированной задачи
         saveEditedTask() {
@@ -111,7 +108,7 @@ new Vue({
                 return;
             }
             const index3 = this.testingTasks.indexOf(task);
-            if (index3 !== -1){
+            if (index3 !== -1 && task.returnReason){
                 this.testingTasks.splice(index3, 1);
                 this.inProgressTasks.push(task);
                 return;
@@ -122,6 +119,7 @@ new Vue({
             this.newTaskTitle = '';
             this.newTaskDescription = '';
             this.newTaskDeadline = '';
+            this.newTaskReturn = '';
         }
     }
 });
