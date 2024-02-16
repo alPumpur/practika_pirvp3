@@ -29,6 +29,7 @@
         <div v-for="(task, index) in inProgressTasks" :key="task.created">
             <div class="task-card">
                 <h3>{{ task.title }}</h3>
+                <p v-if="task.returnReason">Причина возврата: {{ task.returnReason }}</p>
                 <p>{{ task.description }}</p>
                 <p>Дата создания: {{ task.created }}</p>
                 <p>Дедлайн: {{ task.deadline }}</p>
@@ -68,7 +69,7 @@
                 <p v-else>Статус: Выполненная в срок</p>
                 <p>Последнее редактирование: {{ task.lastEdited }}</p>
                 <button @click="deleteTask('completed', index)">Удалить</button>
-                <button @click="removeTask(task)">Передать в тестирование</button>
+            <!--<button @click="removeTask(task)">Передать в тестирование</button>-->
             </div>
         </div>
     </div>
