@@ -8,6 +8,7 @@
 </head>
 <body>
 <div id="app" class="app">
+
     <div class="column" id="column1">
         <h2>Запланированные задачи</h2>
         <div v-for="(task, index) in plannedTasks" :key="task.created">
@@ -23,7 +24,6 @@
             </div>
         </div>
     </div>
-
     <div class="column" id="column2">
         <h2>Задачи в работе</h2>
         <div v-for="(task, index) in inProgressTasks" :key="task.created">
@@ -73,7 +73,6 @@
         </div>
     </div>
 
-    <!-- Форма редактирования задачи -->
     <div v-if="editingTask !== null" class="edit-form">
         <h2>Редактирование задачи</h2>
         <div class="form-group">

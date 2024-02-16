@@ -9,7 +9,7 @@ new Vue({
         newTaskDescription: '',
         newTaskDeadline: '',
         editingTask: null,
-        editedTask: { title: '', description: '', deadline: '' } // Объект для временного хранения отредактированных данных
+        editedTask: { title: '', description: '', deadline: '' }
     },
     methods: {
         editTaskForm(index) {
@@ -61,6 +61,7 @@ new Vue({
             }
             this.clearForm();
         },
+
         deleteTask(column, index) {
             if (column === 'planned') {
                 this.plannedTasks.splice(index, 1);
@@ -72,6 +73,7 @@ new Vue({
                 this.completedTasks.splice(index, 1);
             }
         },
+
         moveTask(task) {
             const index = this.plannedTasks.indexOf(task);
             if (index !== -1) {
@@ -97,6 +99,7 @@ new Vue({
                 return;
             }
         },
+
         removeTask(task) {
             const index4 = this.completedTasks.indexOf(task);
             if (index4 !== -1) {
