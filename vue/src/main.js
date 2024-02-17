@@ -1,4 +1,3 @@
-
 new Vue({
     el: '#app',
     data: {
@@ -9,6 +8,7 @@ new Vue({
         newTaskTitle: '',
         newTaskDescription: '',
         newTaskDeadline: '',
+        newTaskPriority: '',
         editingTask: null,
         editedTask: { title: '', description: '', deadline: '' }
     },
@@ -59,6 +59,7 @@ new Vue({
             this.editingTask = null;
         },
 
+// Изменяем метод добавления задачи в соответствующий столбец
         addTask(column) {
             if (this.newTaskTitle.trim() === '') return;
             const task = {
@@ -66,10 +67,21 @@ new Vue({
                 description: this.newTaskDescription,
                 created: new Date().toLocaleString(),
                 deadline: this.newTaskDeadline,
+                priority: this.newTaskPriority, // Добавляем поле приоритета
                 lastEdited: new Date().toLocaleString()
             };
             if (column === 'planned') {
                 this.plannedTasks.push(task);
+                this.plannedTasks.sort((a, b) => b.priority - a.priority); // Сортируем по приоритету
+            } else if (column === 'inProgress') {
+                this.inProgressTasks.push(task);
+                this.inProgressTasks.sort((a, b) => b.priority - a.priority); // Сортируем по приоритету
+            } else if (column === 'testing') {
+                this.testingTasks.push(task);
+                this.testingTasks.sort((a, b) => b.priority - a.priority); // Сортируем по приоритету
+            } else if (column === 'completed') {
+                this.completedTasks.push(task);
+                this.completedTasks.sort((a, b) => b.priority - a.priority); // Сортируем по приоритету
             }
             this.clearForm();
         },
