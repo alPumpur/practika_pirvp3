@@ -59,31 +59,39 @@ new Vue({
             this.editingTask = null;
         },
 
-// Изменяем метод добавления задачи в соответствующий столбец
         addTask(column) {
             if (this.newTaskTitle.trim() === '') return;
             const task = {
                 title: this.newTaskTitle,
                 description: this.newTaskDescription,
                 created: new Date().toLocaleString(),
+                priority: parseInt(this.newTaskPriority),
                 deadline: this.newTaskDeadline,
-                priority: this.newTaskPriority, // Добавляем поле приоритета
                 lastEdited: new Date().toLocaleString()
             };
             if (column === 'planned') {
                 this.plannedTasks.push(task);
-                this.plannedTasks.sort((a, b) => b.priority - a.priority); // Сортируем по приоритету
-            } else if (column === 'inProgress') {
+                this.plannedTasks.sort((a, b) => b.priority - a.priority);
+            } else
+            if (column === 'inProgress') {
                 this.inProgressTasks.push(task);
-                this.inProgressTasks.sort((a, b) => b.priority - a.priority); // Сортируем по приоритету
-            } else if (column === 'testing') {
+                this.inProgressTasks.sort((a, b) => b.priority - a.priority);
+            } else
+            if (column === 'testing') {
                 this.testingTasks.push(task);
-                this.testingTasks.sort((a, b) => b.priority - a.priority); // Сортируем по приоритету
-            } else if (column === 'completed') {
+                this.testingTasks.sort((a, b) => b.priority - a.priority);
+            } else
+            if (column === 'completed') {
                 this.completedTasks.push(task);
-                this.completedTasks.sort((a, b) => b.priority - a.priority); // Сортируем по приоритету
+                this.completedTasks.sort((a, b) => b.priority - a.priority);
             }
             this.clearForm();
+
+            console.log("Запланированные задачи:", this.plannedTasks);
+            console.log("Задачи в работе:", this.inProgressTasks);
+            console.log("Задачи в тестировании:", this.testingTasks);
+            console.log("Выполненные задачи:", this.completedTasks);
+
         },
         deleteTask(column, index) {
             if (column === 'planned') {
@@ -101,6 +109,7 @@ new Vue({
             if (index !== -1) {
                 this.plannedTasks.splice(index, 1);
                 this.inProgressTasks.push(task);
+                this.inProgressTasks.sort((a, b) => b.priority - a.priority);
                 return;
             }
 
@@ -108,6 +117,7 @@ new Vue({
             if (index1 !== -1) {
                 this.inProgressTasks.splice(index1, 1);
                 this.testingTasks.push(task);
+                this.testingTasks.sort((a, b) => b.priority - a.priority);
                 return;
             }
 
@@ -118,6 +128,7 @@ new Vue({
                 const taskDeadline = new Date(task.deadline);
                 task.deadlineNoPassed = currentDate > taskDeadline;
                 this.completedTasks.push(task);
+                this.completedTasks.sort((a, b) => b.priority - a.priority);
                 return;
             }
         },
