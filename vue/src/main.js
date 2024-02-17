@@ -1,3 +1,4 @@
+
 new Vue({
     el: '#app',
     data: {
@@ -12,9 +13,18 @@ new Vue({
         editedTask: { title: '', description: '', deadline: '' }
     },
     methods: {
-        editTaskForm(index) {
-            this.editingTask = index;
-            const task = this.plannedTasks[index] || this.inProgressTasks[index] || this.testingTasks[index];
+        editTaskForm(column, index) {
+            this.editingTask = { column, index };
+            let task;
+            if (column === 'planned') {
+                task = this.plannedTasks[index];
+            } else if (column === 'inProgress') {
+                task = this.inProgressTasks[index];
+            } else if (column === 'testing') {
+                task = this.testingTasks[index];
+            } else if (column === 'completed') {
+                task = this.completedTasks[index];
+            }
             this.editedTask = {
                 title: task.title,
                 description: task.description,
@@ -23,16 +33,17 @@ new Vue({
         },
 
         saveEditedTask() {
-            let task;
             if (this.editingTask !== null) {
-                if (this.editingTask < this.plannedTasks.length) {
-                    task = this.plannedTasks[this.editingTask];
-                } else if (this.editingTask < this.plannedTasks.length + this.inProgressTasks.length) {
-                    task = this.inProgressTasks[this.editingTask - this.plannedTasks.length];
-                } else if (this.editingTask < this.plannedTasks.length + this.inProgressTasks.length + this.testingTasks.length) {
-                    task = this.testingTasks[this.editingTask - this.plannedTasks.length - this.inProgressTasks.length];
-                } else {
-                    task = this.completedTasks[this.editingTask - this.plannedTasks.length - this.inProgressTasks.length - this.testingTasks.length];
+                let task;
+                const { column, index } = this.editingTask;
+                if (column === 'planned') {
+                    task = this.plannedTasks[index];
+                } else if (column === 'inProgress') {
+                    task = this.inProgressTasks[index];
+                } else if (column === 'testing') {
+                    task = this.testingTasks[index];
+                } else if (column === 'completed') {
+                    task = this.completedTasks[index];
                 }
 
                 task.title = this.editedTask.title;
@@ -42,6 +53,7 @@ new Vue({
             }
             this.editingTask = null;
         },
+
 
         cancelEditTask() {
             this.editingTask = null;
@@ -61,7 +73,6 @@ new Vue({
             }
             this.clearForm();
         },
-
         deleteTask(column, index) {
             if (column === 'planned') {
                 this.plannedTasks.splice(index, 1);
@@ -73,7 +84,6 @@ new Vue({
                 this.completedTasks.splice(index, 1);
             }
         },
-
         moveTask(task) {
             const index = this.plannedTasks.indexOf(task);
             if (index !== -1) {
@@ -99,7 +109,6 @@ new Vue({
                 return;
             }
         },
-
         removeTask(task) {
             const index4 = this.completedTasks.indexOf(task);
             if (index4 !== -1) {

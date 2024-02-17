@@ -1,10 +1,16 @@
 .column {
-    display: inline-block;
+    display: flex;
     vertical-align: top;
     margin: 10px;
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 5px;
+    flex-direction: column;
+}
+
+.column_all{
+    display: flex;
+
 }
 .task-card {
     background-color: #f4f4f4;
