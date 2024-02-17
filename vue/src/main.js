@@ -137,12 +137,14 @@ new Vue({
             if (index4 !== -1) {
                 this.completedTasks.splice(index4, 1);
                 this.testingTasks.push(task);
+                this.testingTasks.sort((a, b) => b.priority - a.priority);
                 return;
             }
             const index3 = this.testingTasks.indexOf(task);
             if (index3 !== -1 && task.returnReason) {
                 this.testingTasks.splice(index3, 1);
                 this.inProgressTasks.push(task);
+                this.inProgressTasks.sort((a, b) => b.priority - a.priority);
                 return;
             }
         },
